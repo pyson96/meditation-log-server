@@ -14,7 +14,7 @@ GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 router = APIRouter()
 
-@router.post("/auth/google/id-token-login")
+@router.post("/auth/oauth-login")
 def login_with_google_id_token(payload: GoogleIdToken, db: Session = Depends(get_db)):
     try:
         # 🔐 Verify token and check audience (aud)
