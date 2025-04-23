@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import auth_routes
+from app.routers import auth_routes, diary_routes
 from app.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
 import os
@@ -10,7 +10,7 @@ app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
 app.include_router(auth_routes.router)
-
+app.include_router(diary_routes.router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[FRONTEND_ORIGIN],  # frontend origin
