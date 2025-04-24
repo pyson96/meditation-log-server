@@ -18,3 +18,28 @@ def create_diary(
     db.commit()
     db.refresh(diary)
     return {"message": "Diary saved", "id": diary.id}
+
+@router.get("/diaries/{entry_date}")
+def get_diary_by_date(
+    entry_date: date,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    diary = (
+        db.query(MeditationDiary)
+        .filter(
+            MeditationDiary.user_id == current_user.id,
+            MeditationDiary.date == entry_date
+        )
+        .first()
+    )
+
+    if not diary:
+        raise HTTPException(status_code=404, detail="Diary not found for that date")
+
+    return {
+        "id": diary.id,
+        "date": diary.date,
+        "subtitles": [getattr(diary, f"subtitle_{i}") for i in range(1, 11)],
+        "contents": [getattr(diary, f"content_{i}") for i in range(1, 11)],
+    }
